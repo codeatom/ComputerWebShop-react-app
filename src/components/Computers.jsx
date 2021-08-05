@@ -14,7 +14,7 @@ const Computers = (props) => {
            <h3>{computer.price}</h3> 
            <p>{computer.description}</p>
         
-        <button onClick={() => {props.addToCart(computer.id);}} className="btn btn-primary btn-info" >
+        <button onClick={() => {props.addToCart(computer);}} className="btn btn-primary btn-info" >
             Add to cart
         </button>
 
@@ -25,7 +25,7 @@ const Computers = (props) => {
   });
 
   return (
-    <div className="col-md-8" >
+    <div className="col-md-7" >
         {rows}
         <br></br>
     </div>

@@ -14,7 +14,7 @@ const Categories = (props) => {
   });
 
   return ( 
-    <div className="col-md-8" >
+    <div className="col-md-7" >
 
       <br></br>
       <h1>Categories</h1>

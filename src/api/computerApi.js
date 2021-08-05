@@ -1,4 +1,4 @@
-//import axios from "axios";
+import axios from "axios";
 
 
 export default function getComputers() {
@@ -13,15 +13,29 @@ export async function getCategories() {
 }
 
 
-export async function getComputerById(id) {
+export async function reateCartItem(id) {
   try {
-    let response = await fetch("https://localhost:44310/api/React/" + id);
-    let json = await response.json();
-    return json;
+    let response = await axios.delete("https://localhost:44310/api/ShoppingCart/" + id);
+    console.log(response);
+    return true;
   } catch (e) {
-    console.log("Error", e);
+    console.log("Error!", e);
+    return false;
   }
 }
 
 
+export async function createCartItem(cartItems) {
 
+  return fetch("https://localhost:44310/api/ShoppingCart", {
+    method: 'POST',
+    body: JSON.stringify(cartItems),
+    headers: {
+        'Content-type': 'application/json; charset=UTF-8'
+    }
+})
+.then(response => response.json())
+.then(json => {
+    console.log(json);
+});
+}

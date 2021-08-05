@@ -19,7 +19,7 @@ const LogoAndLinks = (props) => {
            <br></br>
            <br></br>
 
-           <button class="btn bg-transparent" style={{color: '#0073e6'}} onClick={() => {props.showAllComputers();}}>
+           <button className="btn bg-transparent" style={{color: '#0073e6'}} onClick={() => {props.showAllComputers();}}>
                <h5>All Computers</h5>    
            </button>
 

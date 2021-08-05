@@ -12,7 +12,7 @@ const ComputerDetails = (props) => {
         <p>{computer.computerSpecs}</p>
         
         <button 
-          onClick={() => {props.addToCart(computer.id);}} className="btn btn-primary btn-info" style={{marginRight: '10px'}}>
+          onClick={() => {props.addToCart(computer);}} className="btn btn-primary btn-info" style={{marginRight: '10px'}}>
             Add to cart
         </button>
 
@@ -24,7 +24,7 @@ const ComputerDetails = (props) => {
   });
 
   return (   
-    <div className="col-md-8" >
+    <div className="col-md-7" >
         {rows}
         <br></br>
     </div>

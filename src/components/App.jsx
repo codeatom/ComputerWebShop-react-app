@@ -4,9 +4,12 @@ import Footer from "./Footer";
 import Computers from "./Computers";
 import ComputerDetails from "./ComputerDetails";
 import LogoAndLinks from "./LogoAndLinks";
+import CartItemsTable from "./CartItemsTable";
+import CartSummary from "./CartSummary";
 
 import getComputers, {
   getCategories,
+  createCartItem,
 } from "../api/computerApi";
 
 
@@ -22,10 +25,14 @@ class App extends Component {
     categories: false,
 
     showComputers: true,
+    showItemsInCart: false,
     showComputerdetails: false,
+
+    itemsTotalCost: 0,
+    cartItemsList: [],
     
-    computerId: 0,
-    };
+    computerId: 0, 
+  };
 
 
   componentDidMount() {
@@ -98,6 +105,8 @@ class App extends Component {
     this.setState({
       showComputers: false,
       showComputerdetails : false,
+      categories: false,
+      showItemsInCart: false,
     });
   };
 
@@ -116,9 +125,52 @@ class App extends Component {
   };
 
 
-  addToCart = () => {
-   // TODO
+  showCartItems = () => {
+    this.setState({
+      showItemsInCart : true,
+    });
   };
+
+
+  addToCart = (cartItem) => {
+    this.state.cartItemsList.push(cartItem);
+
+    this.calculateTotalCost();
+    this.showCartItems();
+  };
+
+
+  checkOut = () => {
+    createCartItem(this.state.cartItemsList);
+  };
+
+
+  removeCartItem = (id) => {
+    for(let i = 0; i<this.state.cartItemsList.length; i++){
+       if(this.state.cartItemsList[i].id === id){
+          this.state.cartItemsList.splice(i, 1);
+          break;
+       }
+    }
+
+    this.calculateTotalCost();
+    this.closeSideElement();
+    this.showCartItems();
+  };
+
+
+   calculateTotalCost = () =>{
+    let totalCost = 0;
+
+    for(let i = 0; i<this.state.cartItemsList.length; i++){
+      totalCost = totalCost + Number(this.state.cartItemsList[i].price);
+    }
+
+    this.setState({
+      itemsTotalCost : totalCost,
+    });
+   }
+
 
 
   render() {  
@@ -136,6 +188,21 @@ class App extends Component {
            showAllComputers={this.showAllComputers} 
         />
     </div>
+    ) : this.state.showItemsInCart ? (
+      <div>
+        <h3>Cart Items</h3>
+
+        <hr></hr>
+        <br></br>
+
+        <CartItemsTable 
+           cartItems={this.state.cartItemsList}
+           itemsTotalCost={this.state.itemsTotalCost}
+           removeCartItem={this.removeCartItem}
+           checkOut={this.checkOut} 
+           placeOrder={this.placeOrder}     
+        />
+    </div>
     ) : (
       <div>
          <h3 style={{color: '#006600'}}>{this.state.categoryName}</h3>
@@ -146,9 +213,9 @@ class App extends Component {
         <Computers 
            computers={this.state.computerList}
            computer={this.state.computerDetails}
-           displayComputerDetails={this.displayComputerDetails}
-           addToCart={this.addToCart}
            close={this.closeSideDiv} 
+           displayComputerDetails={this.displayComputerDetails}
+           addToCart={this.addToCart} 
         />
     </div>
     );
@@ -165,9 +232,14 @@ class App extends Component {
                showCategoryComputers={this.showCategoryComputers} 
                showAllComputers={this.showAllComputers}
                showComputersOnSale={this.showComputersOnSale} 
-            />
+             />
 
              {sideElement}
+
+             <CartSummary
+               cartItemsList={this.state.cartItemsList} 
+               showCartItems={this.showCartItems} 
+             />
           </div>
         </div>
 
