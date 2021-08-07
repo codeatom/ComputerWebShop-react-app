@@ -6,6 +6,11 @@ import ComputerDetails from "./ComputerDetails";
 import LogoAndLinks from "./LogoAndLinks";
 import CartItemsTable from "./CartItemsTable";
 import CartSummary from "./CartSummary";
+import CreateOrder from "./CreateOrder";
+import PlaceOrder from "./PlaceOrder";
+import OrderComplete from "./OrderComplete";
+import Receipt from "./Receipt";
+
 
 import getComputers, {
   getCategories,
@@ -22,18 +27,29 @@ class App extends Component {
     
     categoryList: [],
     categoryName: "All Computers",
-    categories: false,
 
-    showComputers: true,
-    showItemsInCart: false,
-    showComputerdetails: false,
-
+    computerId: 0, 
     itemsTotalCost: 0,
     cartItemsList: [],
+    computerIdList: [],
     
-    computerId: 0, 
-  };
+    jsonObject: {
+      computerIdList: [],
+      createOrder: {},
+    },
 
+    categories: false,
+    showReceipt: false,
+    showComputers: false,
+    showPlaceOrder: false,
+    showItemsInCart: false,
+    showCreateOrder: false,
+    showOrderComplete: false,
+    showComputerdetails: false,
+
+    orderedItemCost: 0,
+    orderedItems: [],
+  }
 
   componentDidMount() {
     const _this = this;
@@ -103,10 +119,14 @@ class App extends Component {
 
   closeSideElement = () => {
     this.setState({
-      showComputers: false,
-      showComputerdetails : false,
       categories: false,
+      showReceipt: false,
+      showComputers: false,
+      showPlaceOrder: false,
       showItemsInCart: false,
+      showCreateOrder: false,
+      showOrderComplete: false,
+      showComputerdetails : false,
     });
   };
 
@@ -132,16 +152,42 @@ class App extends Component {
   };
 
 
-  addToCart = (cartItem) => {
-    this.state.cartItemsList.push(cartItem);
-
-    this.calculateTotalCost();
-    this.showCartItems();
+  showCreateOrder = () => {
+    this.setState({
+      showCreateOrder: true,
+    });
   };
 
 
-  checkOut = () => {
-    createCartItem(this.state.cartItemsList);
+  showPlaceOrder = () => {
+    this.setState({
+      showPlaceOrder: true,
+    });
+  };
+
+
+  showOrderComplete = () => {
+    this.setState({
+      showOrderComplete: true,
+    });
+  }
+
+
+  showReceipt = () => {
+    this.closeSideElement();
+
+    this.setState({
+      showReceipt: true,
+    });
+  }
+
+
+  addToCart = (cartItem) => {
+    this.state.cartItemsList.push(cartItem);
+    this.state.computerIdList.push(cartItem.id);
+
+    this.calculateTotalCost();
+    this.showCartItems();
   };
 
 
@@ -159,7 +205,7 @@ class App extends Component {
   };
 
 
-   calculateTotalCost = () =>{
+  calculateTotalCost = () =>{
     let totalCost = 0;
 
     for(let i = 0; i<this.state.cartItemsList.length; i++){
@@ -172,7 +218,47 @@ class App extends Component {
    }
 
 
+  checkOut = () => {
+    this.closeSideElement();
+    this.showCreateOrder();
+  };
 
+
+  createOrder = (orderData) => {
+    this.setState({
+      jsonObject : {
+        createOrder: orderData,
+        computerIdList: this.state.computerIdList, 
+      }
+    });
+
+    this.closeSideElement();
+    this.showPlaceOrder();
+  };
+
+
+  placeOrder = () => {
+    createCartItem(this.state.jsonObject);
+
+    this.clearShoppingCart();
+    this.closeSideElement();
+    this.showOrderComplete();
+  };
+
+
+  clearShoppingCart = () => {
+    this.setState({
+      orderedItems: this.state.cartItemsList,
+      orderedItemCost: this.state.itemsTotalCost,
+      cartItemsList: [],
+      computerIdList: [],
+      });
+  };
+
+  
+
+
+  //----------Render----------//
   render() {  
     const sideElement =
     this.state.showComputerdetails ? (
@@ -183,9 +269,9 @@ class App extends Component {
         <br></br>
 
         <ComputerDetails 
-           computer={this.state.computerDetails}
-           addToCart={this.addToCart}
+           computer={this.state.computerDetails}          
            showAllComputers={this.showAllComputers} 
+           addToCart={this.addToCart}
         />
     </div>
     ) : this.state.showItemsInCart ? (
@@ -199,8 +285,55 @@ class App extends Component {
            cartItems={this.state.cartItemsList}
            itemsTotalCost={this.state.itemsTotalCost}
            removeCartItem={this.removeCartItem}
-           checkOut={this.checkOut} 
+           checkOut={this.checkOut}     
+        />
+    </div>
+     ) : this.state.showCreateOrder ? (
+      <div>
+        <h3>Please enter your information</h3>
+
+        <hr></hr>
+        <br></br>
+
+        <CreateOrder 
+           cartItems={this.state.cartItemsList}
+           itemsTotalCost={this.state.itemsTotalCost}
+           createOrder={this.createOrder}     
+        />
+    </div>
+    ) : this.state.showPlaceOrder ? (
+      <div>
+        <h3>Complete your order</h3>
+
+        <hr></hr>
+        <br></br>
+
+        <PlaceOrder 
+           cartItems={this.state.cartItemsList}
+           itemsTotalCost={this.state.itemsTotalCost}
            placeOrder={this.placeOrder}     
+        />
+    </div>
+     ) : this.state.showOrderComplete ? (
+      <div>
+        <br></br><br></br><br></br><br></br>                         
+        <h5>Thank you for your order</h5>
+
+        <OrderComplete 
+           cartItems={this.state.cartItemsList}
+           itemsTotalCost={this.state.itemsTotalCost}
+           showReceipt={this.showReceipt}     
+        />
+    </div>
+    ) : this.state.showReceipt ? (
+      <div>
+        <br></br><br></br>
+        <h5>Here is your receipt</h5>
+        <br></br>
+
+        <Receipt 
+           orderedItems={this.state.orderedItems}
+           itemsTotalCost={this.state.itemsTotalCost}
         />
     </div>
     ) : (

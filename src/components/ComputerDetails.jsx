@@ -11,8 +11,8 @@ const ComputerDetails = (props) => {
         <p>{computer.description}</p>
         <p>{computer.computerSpecs}</p>
         
-        <button 
-          onClick={() => {props.addToCart(computer);}} className="btn btn-primary btn-info" style={{marginRight: '10px'}}>
+
+        <button onClick={() => {props.addToCart(computer);}} className="btn btn-primary btn-info" style={{marginRight: '10px'}}>
             Add to cart
         </button>
 

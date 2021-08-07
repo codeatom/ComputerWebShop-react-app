@@ -11,7 +11,7 @@ const CartSummary = (props) => {
 
   let cart = 
          <button class="btn bg-transparent" style={divStyle} onClick={() => {props.showCartItems();}}>
-             <h5>Cart_{props.cartItemsList.length}</h5>     
+             <h5 >Cart_{props.cartItemsList.length}</h5>     
          </button>
 
      

@@ -25,11 +25,11 @@ export async function reateCartItem(id) {
 }
 
 
-export async function createCartItem(cartItems) {
+export async function createCartItem(jsonObject) {
 
   return fetch("https://localhost:44310/api/ShoppingCart", {
     method: 'POST',
-    body: JSON.stringify(cartItems),
+    body: JSON.stringify(jsonObject),
     headers: {
         'Content-type': 'application/json; charset=UTF-8'
     }
