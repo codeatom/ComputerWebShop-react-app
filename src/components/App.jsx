@@ -11,12 +11,10 @@ import PlaceOrder from "./PlaceOrder";
 import OrderComplete from "./OrderComplete";
 import Receipt from "./Receipt";
 
-
 import getComputers, {
   getCategories,
   createCartItem,
 } from "../api/computerApi";
-
 
 
 class App extends Component {
@@ -237,13 +235,16 @@ class App extends Component {
   };
 
 
-  placeOrder = () => {
-    createCartItem(this.state.jsonObject);
-
-    this.clearShoppingCart();
-    this.closeSideElement();
-    this.showOrderComplete();
-  };
+  placeOrder = async () => {
+    let jsonObject = null;
+    jsonObject = await createCartItem(this.state.jsonObject);
+ 
+     if (jsonObject !== null) {     
+       this.clearShoppingCart();
+       this.closeSideElement();
+       this.showOrderComplete();
+     }
+   };
 
 
   clearShoppingCart = () => {
@@ -256,7 +257,6 @@ class App extends Component {
   };
 
   
-
 
   //----------Render----------//
   render() {  

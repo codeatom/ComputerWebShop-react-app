@@ -1,4 +1,4 @@
-import axios from "axios";
+//import axios from "axios";
 
 
 export default function getComputers() {
@@ -13,20 +13,7 @@ export async function getCategories() {
 }
 
 
-export async function reateCartItem(id) {
-  try {
-    let response = await axios.delete("https://localhost:44310/api/ShoppingCart/" + id);
-    console.log(response);
-    return true;
-  } catch (e) {
-    console.log("Error!", e);
-    return false;
-  }
-}
-
-
 export async function createCartItem(jsonObject) {
-
   return fetch("https://localhost:44310/api/ShoppingCart", {
     method: 'POST',
     body: JSON.stringify(jsonObject),
