@@ -7,14 +7,14 @@ const Categories = (props) => {
         <td>{category.name}</td>
         <td>{category.description}</td>
         <td>
-        <button class="btn btn-link text-danger" >|Delete|</button>
+        <button className="btn btn-link text-danger" >|Delete|</button>
         </td>
       </tr>
     );
   });
 
   return ( 
-    <div className="col-md-7" >
+    <div>
 
       <br></br>
       <h1>Categories</h1>

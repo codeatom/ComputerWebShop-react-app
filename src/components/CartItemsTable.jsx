@@ -1,29 +1,31 @@
 import React from "react";
 
 const CartItemsTable = (props) => {
-  const rows = props.cartItems.map((item) => {
+  const rows = props.cartItems.map((item, index) => {
     return (
-      <tr key={item.id}>
+      <tr key={"cartItem" + index}>
         <td>{item.name}</td>
         <td>{item.price}</td>
-        <button class="btn bg-transparent" style={{color: '#cc0000'}} onClick={() => {props.removeCartItem(item.id);}}>
-          |Remove|
-        </button>
+        <td>
+          <button className="btn bg-transparent" style={{color: '#cc0000'}} onClick={() => {props.removeCartItem(item.id);}}>
+            |Remove|
+          </button>
+        </td>
       </tr>
     );
   });
 
   const tableFooter = 
-    <tfoot class="text-right">
+    <tfoot className="text-right">
       <tr>
-        <td class="text-right font-weight-bold">Total</td>
-        <td class="text-right font-weight-bold">{props.itemsTotalCost}</td>
+        <td className="text-right font-weight-bold">Total</td>
+        <td className="text-right font-weight-bold">{props.itemsTotalCost}</td>
       </tr>
     </tfoot>
 
 
   return (  
-    <div className="col-md-7" >
+    <div>
 
       <table className="table table-striped table-bordered">        
         <thead className="thead-dark">

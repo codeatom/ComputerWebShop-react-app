@@ -3,16 +3,22 @@ import React from "react";
 
 const LogoAndLinks = (props) => {
 
-  const rows = props.categories.map((category) => {
+  const rows = props.categories.map((category, index) => {
     return (
-      <button class="btn bg-transparent" style={{color: '#0073e6'}} onClick={() => {props.showCategoryComputers(category.name);}}>
-         <h5>{category.name}</h5>
+      <button 
+        key={index + category.id} 
+        className="btn bg-transparent" 
+        style={{color: '#0073e6'}} 
+        onClick={() => {
+          props.showCategoryComputers(category.name);
+        }}>
+        <h5>{category.name}</h5>
       </button>    
     );
   });
  
     return (   
-        <div className="col-md-4" >
+        <div>
            <img src="./Images/logo/logo.png" alt="Logo" />
 
            <br></br>
@@ -31,7 +37,7 @@ const LogoAndLinks = (props) => {
            <br></br>
            <br></br>
            
-           <button class="btn bg-transparent" style={{color: '#006600'}} onClick={() => {props.showComputersOnSale();}}>
+           <button className="btn bg-transparent" style={{color: '#006600'}} onClick={() => {props.showComputersOnSale();}}>
               <h5>Computers on sale</h5>    
             </button>
         </div>

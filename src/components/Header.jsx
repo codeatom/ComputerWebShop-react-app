@@ -1,6 +1,7 @@
 import React from "react";
+import CartSummary from "./CartSummary";
 
-const Header = () => {
+const Header = (props) => {
   return (
     <nav className="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
       <a
@@ -40,6 +41,13 @@ const Header = () => {
           </a>
         </li>
       </ul>
+
+      <div className="ml-auto">
+              <CartSummary
+                cartItemsList={props.cartItemsList} 
+                showCartItems={props.showCartItems} 
+              />
+            </div> 
     </nav>
   );
 };

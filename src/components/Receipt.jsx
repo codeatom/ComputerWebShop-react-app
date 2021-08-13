@@ -1,9 +1,9 @@
 import React from "react";
 
 const Receipt = (props) => {
-  const rows = props.orderedItems.map((item) => {
+  const rows = props.orderedItems.map((item, index) => {
     return (
-      <tr key={item.id}>
+      <tr key={index + item.id}>
         <td>{item.name}</td>
         <td>{item.price}</td>
       </tr>
@@ -11,16 +11,16 @@ const Receipt = (props) => {
   });
 
   const tableFooter = 
-    <tfoot class="text-right">
+    <tfoot className="text-right">
       <tr>
-        <td class="text-right font-weight-bold">Total</td>
-        <td class="text-right font-weight-bold">{props.itemsTotalCost}</td>
+        <td className="text-right font-weight-bold">Total</td>
+        <td className="text-right font-weight-bold">{props.itemsTotalCost}</td>
       </tr>
     </tfoot>
 
 
   return (  
-    <div className="col-md-7" >
+    <div>
 
       <table className="table table-striped table-bordered">        
       

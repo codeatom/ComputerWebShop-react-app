@@ -5,16 +5,17 @@ import Computers from "./Computers";
 import ComputerDetails from "./ComputerDetails";
 import LogoAndLinks from "./LogoAndLinks";
 import CartItemsTable from "./CartItemsTable";
-import CartSummary from "./CartSummary";
 import CreateOrder from "./CreateOrder";
 import PlaceOrder from "./PlaceOrder";
 import OrderComplete from "./OrderComplete";
 import Receipt from "./Receipt";
 
+
 import getComputers, {
   getCategories,
   createCartItem,
 } from "../api/computerApi";
+
 
 
 class App extends Component {
@@ -31,6 +32,7 @@ class App extends Component {
     cartItemsList: [],
     computerIdList: [],
     
+
     jsonObject: {
       computerIdList: [],
       createOrder: {},
@@ -70,8 +72,6 @@ class App extends Component {
 
     this.setState({computerList : categoryComputers});
     this.setState({categoryName : "All Computers"})
-
-    this.closeSideElement();
     this.showComputers();
   }
 
@@ -83,9 +83,7 @@ class App extends Component {
 
     this.setState({computerList : categoryComputers});
     this.setState({categoryName : "On Sale"})
-
-    this.closeSideElement();
-    this.setState({ showComputers: true, });
+    this.showComputers();
   }
 
 
@@ -96,8 +94,6 @@ class App extends Component {
 
     this.setState({computerList : categoryComputers });
     this.setState({categoryName : categoryName})
-
-    this.closeSideElement();
     this.showComputers();
   }
 
@@ -109,27 +105,12 @@ class App extends Component {
 
     this.setState({computerDetails : computer });
     this.setState({categoryName : ""})
-
-    this.closeSideElement();
     this.showComputerDetails();
    };
 
 
-  closeSideElement = () => {
-    this.setState({
-      categories: false,
-      showReceipt: false,
-      showComputers: false,
-      showPlaceOrder: false,
-      showItemsInCart: false,
-      showCreateOrder: false,
-      showOrderComplete: false,
-      showComputerdetails : false,
-    });
-  };
-
-
   showComputers = () => {
+    this.closeSideElement();
     this.setState({
       showComputers : true,
     });
@@ -137,6 +118,7 @@ class App extends Component {
 
 
   showComputerDetails = () => {
+    this.closeSideElement();
     this.setState({
       showComputerdetails : true,
     });
@@ -144,6 +126,7 @@ class App extends Component {
 
 
   showCartItems = () => {
+    this.closeSideElement();
     this.setState({
       showItemsInCart : true,
     });
@@ -151,6 +134,7 @@ class App extends Component {
 
 
   showCreateOrder = () => {
+    this.closeSideElement();
     this.setState({
       showCreateOrder: true,
     });
@@ -158,6 +142,7 @@ class App extends Component {
 
 
   showPlaceOrder = () => {
+    this.closeSideElement();
     this.setState({
       showPlaceOrder: true,
     });
@@ -165,6 +150,7 @@ class App extends Component {
 
 
   showOrderComplete = () => {
+    this.closeSideElement();
     this.setState({
       showOrderComplete: true,
     });
@@ -173,7 +159,6 @@ class App extends Component {
 
   showReceipt = () => {
     this.closeSideElement();
-
     this.setState({
       showReceipt: true,
     });
@@ -183,9 +168,13 @@ class App extends Component {
   addToCart = (cartItem) => {
     this.state.cartItemsList.push(cartItem);
     this.state.computerIdList.push(cartItem.id);
-
     this.calculateTotalCost();
     this.showCartItems();
+  };
+
+
+  checkOut = () => {
+    this.showCreateOrder();
   };
 
 
@@ -198,12 +187,11 @@ class App extends Component {
     }
 
     this.calculateTotalCost();
-    this.closeSideElement();
     this.showCartItems();
   };
 
 
-  calculateTotalCost = () =>{
+   calculateTotalCost = () =>{
     let totalCost = 0;
 
     for(let i = 0; i<this.state.cartItemsList.length; i++){
@@ -216,12 +204,6 @@ class App extends Component {
    }
 
 
-  checkOut = () => {
-    this.closeSideElement();
-    this.showCreateOrder();
-  };
-
-
   createOrder = (orderData) => {
     this.setState({
       jsonObject : {
@@ -230,22 +212,18 @@ class App extends Component {
       }
     });
 
-    this.closeSideElement();
     this.showPlaceOrder();
   };
-
 
   placeOrder = async () => {
     let jsonObject = null;
     jsonObject = await createCartItem(this.state.jsonObject);
- 
-     if (jsonObject !== null) {     
-       this.clearShoppingCart();
-       this.closeSideElement();
-       this.showOrderComplete();
-     }
-   };
 
+    if (jsonObject !== null) {     
+      this.clearShoppingCart();
+      this.showOrderComplete();
+    }
+  };
 
   clearShoppingCart = () => {
     this.setState({
@@ -256,7 +234,21 @@ class App extends Component {
       });
   };
 
+
+  closeSideElement = () => {
+    this.setState({
+      categories: false,
+	    showReceipt: false,
+      showComputers: false,
+      showPlaceOrder: false,
+      showItemsInCart: false,
+      showCreateOrder: false,
+      showOrderComplete: false,
+      showComputerdetails : false,
+    });
+  };
   
+
 
   //----------Render----------//
   render() {  
@@ -356,23 +348,27 @@ class App extends Component {
 
     return (
       <React.Fragment>
-        <Header />
+        <Header
+        cartItemsList={this.state.cartItemsList}
+        showCartItems={this.showCartItems}
+        />
 
         <div className="container stay-clear">
           <div className="row">
-             <LogoAndLinks 
-               categories={this.state.categoryList} 
-               showCategoryComputers={this.showCategoryComputers} 
-               showAllComputers={this.showAllComputers}
-               showComputersOnSale={this.showComputersOnSale} 
-             />
 
+            <div className="col-4">
+              <LogoAndLinks 
+                categories={this.state.categoryList} 
+                showCategoryComputers={this.showCategoryComputers} 
+                showAllComputers={this.showAllComputers}
+                showComputersOnSale={this.showComputersOnSale} 
+              />
+            </div>
+
+            <div className="col-8">
              {sideElement}
+            </div>
 
-             <CartSummary
-               cartItemsList={this.state.cartItemsList} 
-               showCartItems={this.showCartItems} 
-             />
           </div>
         </div>
 

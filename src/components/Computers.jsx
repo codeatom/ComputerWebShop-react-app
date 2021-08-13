@@ -2,9 +2,9 @@ import React from "react";
 
 
 const Computers = (props) => {
-  const rows = props.computers.map((computer) => {
+  const rows = props.computers.map((computer, index) => {
     return (
-      <div>
+      <div key={index + computer.id}>
           <div onClick={() => {props.displayComputerDetails(computer.id);}}>                       
              <img src={computer.imageThumbnailUrl} alt="" />
           </div>
@@ -25,7 +25,7 @@ const Computers = (props) => {
   });
 
   return (
-    <div className="col-md-7" >
+    <div>
         {rows}
         <br></br>
     </div>
