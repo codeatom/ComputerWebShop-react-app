@@ -26,8 +26,13 @@ const Computers = (props) => {
 
   return (
     <div>
-        {rows}
-        <br></br>
+      <h3 style={{color: '#006600'}}>{props.categoryName}</h3>
+      <hr></hr>
+      <br></br>
+
+      {rows}
+
+      <br></br>
     </div>
   );
 };

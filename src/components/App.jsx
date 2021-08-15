@@ -8,14 +8,15 @@ import CartItemsTable from "./CartItemsTable";
 import CreateOrder from "./CreateOrder";
 import PlaceOrder from "./PlaceOrder";
 import OrderComplete from "./OrderComplete";
+import OrderHistoryRequest from "./OrderHistoryRequest";
+import OrderHistory from "./OrderHistory";
 import Receipt from "./Receipt";
-
 
 import getComputers, {
   getCategories,
   createCartItem,
+  getOrderedItems,
 } from "../api/computerApi";
-
 
 
 class App extends Component {
@@ -23,19 +24,21 @@ class App extends Component {
     allComputersList: [],
     computerList: [],
     computerDetails: [],
-    
+    computerIdList: [],
+    computerId: 0, 
+
     categoryList: [],
     categoryName: "All Computers",
 
-    computerId: 0, 
+    order: [],
+    orderId: 0,
+    orderedItemCost: 0,
     itemsTotalCost: 0,
     cartItemsList: [],
-    computerIdList: [],
     
-
     jsonObject: {
-      computerIdList: [],
       createOrder: {},
+      computerIdList: [],
     },
 
     categories: false,
@@ -44,13 +47,13 @@ class App extends Component {
     showPlaceOrder: false,
     showItemsInCart: false,
     showCreateOrder: false,
+    showOrderHistory: false,
     showOrderComplete: false,
     showComputerdetails: false,
-
-    orderedItemCost: 0,
-    orderedItems: [],
+    showOrderHistoryRequest: false, 
   }
 
+  
   componentDidMount() {
     const _this = this;
 
@@ -165,6 +168,22 @@ class App extends Component {
   }
 
 
+  showOrderHistory = () => {
+    this.closeSideElement();
+    this.setState({
+      showOrderHistory: true,
+    });
+  }
+
+
+  showOrderHistoryRequest = () => {
+    this.closeSideElement();
+    this.setState({
+      showOrderHistoryRequest: true,
+    });
+  }
+
+
   addToCart = (cartItem) => {
     this.state.cartItemsList.push(cartItem);
     this.state.computerIdList.push(cartItem.id);
@@ -174,6 +193,7 @@ class App extends Component {
 
 
   checkOut = () => {
+    if(this.state.cartItemsList.length >= 1)
     this.showCreateOrder();
   };
 
@@ -215,23 +235,38 @@ class App extends Component {
     this.showPlaceOrder();
   };
 
-  placeOrder = async () => {
-    let jsonObject = null;
-    jsonObject = await createCartItem(this.state.jsonObject);
 
-    if (jsonObject !== null) {     
+  placeOrder = async () => {
+    let jsonObject = await createCartItem(this.state.jsonObject);
+
+    if (jsonObject !== undefined) { 
+      this.setState({
+        orderId: jsonObject.orderId,
+      });
+
       this.clearShoppingCart();
       this.showOrderComplete();
     }
   };
 
+
   clearShoppingCart = () => {
     this.setState({
-      orderedItems: this.state.cartItemsList,
+      order: this.state.cartItemsList,
       orderedItemCost: this.state.itemsTotalCost,
       cartItemsList: [],
       computerIdList: [],
       });
+  };
+
+
+  getOrderHistory = async (orderId) => {
+    let orderdetails = await getOrderedItems(orderId);  
+
+    if (orderdetails !== undefined) {     
+      this.state.order = orderdetails;
+      this.showOrderHistory();
+    } 
   };
 
 
@@ -243,8 +278,10 @@ class App extends Component {
       showPlaceOrder: false,
       showItemsInCart: false,
       showCreateOrder: false,
+      showOrderHistory: false,
       showOrderComplete: false,
       showComputerdetails : false,
+      showOrderHistoryRequest: false
     });
   };
   
@@ -255,24 +292,15 @@ class App extends Component {
     const sideElement =
     this.state.showComputerdetails ? (
     <div>
-        <h3 style={{color: '#006600'}}>{this.state.categoryName}</h3>
-
-        <hr></hr>
-        <br></br>
-
         <ComputerDetails 
-           computer={this.state.computerDetails}          
+           computer={this.state.computerDetails}
+           categoryName={this.state.categoryName}          
            showAllComputers={this.showAllComputers} 
            addToCart={this.addToCart}
         />
     </div>
     ) : this.state.showItemsInCart ? (
       <div>
-        <h3>Cart Items</h3>
-
-        <hr></hr>
-        <br></br>
-
         <CartItemsTable 
            cartItems={this.state.cartItemsList}
            itemsTotalCost={this.state.itemsTotalCost}
@@ -282,11 +310,6 @@ class App extends Component {
     </div>
      ) : this.state.showCreateOrder ? (
       <div>
-        <h3>Please enter your information</h3>
-
-        <hr></hr>
-        <br></br>
-
         <CreateOrder 
            cartItems={this.state.cartItemsList}
            itemsTotalCost={this.state.itemsTotalCost}
@@ -295,11 +318,6 @@ class App extends Component {
     </div>
     ) : this.state.showPlaceOrder ? (
       <div>
-        <h3>Complete your order</h3>
-
-        <hr></hr>
-        <br></br>
-
         <PlaceOrder 
            cartItems={this.state.cartItemsList}
            itemsTotalCost={this.state.itemsTotalCost}
@@ -308,36 +326,40 @@ class App extends Component {
     </div>
      ) : this.state.showOrderComplete ? (
       <div>
-        <br></br><br></br><br></br><br></br>                         
-        <h5>Thank you for your order</h5>
-
         <OrderComplete 
            cartItems={this.state.cartItemsList}
            itemsTotalCost={this.state.itemsTotalCost}
+           jsonObject={this.state.jsonObject}
+           orderId={this.state.orderId}
            showReceipt={this.showReceipt}     
+        />
+    </div>
+    ) : this.state.showOrderHistoryRequest ? (
+      <div>
+        <OrderHistoryRequest 
+           getOrderHistory={this.getOrderHistory}     
+        />
+    </div>
+    ) : this.state.showOrderHistory ? (
+      <div>        
+        <OrderHistory
+           order={this.state.order}
+           showReceipt={this.showReceipt}    
         />
     </div>
     ) : this.state.showReceipt ? (
       <div>
-        <br></br><br></br>
-        <h5>Here is your receipt</h5>
-        <br></br>
-
         <Receipt 
-           orderedItems={this.state.orderedItems}
+           order={this.state.order}
            itemsTotalCost={this.state.itemsTotalCost}
         />
     </div>
     ) : (
       <div>
-         <h3 style={{color: '#006600'}}>{this.state.categoryName}</h3>
-
-         <hr></hr>
-         <br></br>
-
         <Computers 
            computers={this.state.computerList}
            computer={this.state.computerDetails}
+           categoryName={this.state.categoryName}
            close={this.closeSideDiv} 
            displayComputerDetails={this.displayComputerDetails}
            addToCart={this.addToCart} 
@@ -361,7 +383,8 @@ class App extends Component {
                 categories={this.state.categoryList} 
                 showCategoryComputers={this.showCategoryComputers} 
                 showAllComputers={this.showAllComputers}
-                showComputersOnSale={this.showComputersOnSale} 
+                showComputersOnSale={this.showComputersOnSale}
+                showOrderHistoryRequest={this.showOrderHistoryRequest} 
               />
             </div>
 

@@ -27,6 +27,10 @@ const CartItemsTable = (props) => {
   return (  
     <div>
 
+      <h3>Cart Items</h3>
+       <hr></hr>
+       <br></br>
+
       <table className="table table-striped table-bordered">        
         <thead className="thead-dark">
           <tr>

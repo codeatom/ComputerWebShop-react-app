@@ -19,9 +19,13 @@ class CreateOrder extends Component {
 
   render() {
     return (
-      <div>         
-        <form onSubmit={this.createOrder}>
+      <div> 
 
+        <h3>Please enter your information</h3>
+        <hr></hr>
+        <br></br>
+
+        <form onSubmit={this.createOrder}>
           <div className="row mb-2">
             <label htmlFor="firstName">
               FirstName:
@@ -123,8 +127,8 @@ class CreateOrder extends Component {
           <div >
             <button className="btn btn-success" >Submit</button>
           </div>
-
         </form>
+
       </div>
     );
   }

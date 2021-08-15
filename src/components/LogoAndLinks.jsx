@@ -30,15 +30,20 @@ const LogoAndLinks = (props) => {
            </button>
 
            <br></br>
-           <br></br>
 
             {rows}
 
            <br></br>
-           <br></br>
            
            <button className="btn bg-transparent" style={{color: '#006600'}} onClick={() => {props.showComputersOnSale();}}>
               <h5>Computers on sale</h5>    
+            </button>
+
+            <br></br>
+            <br></br>
+
+            <button className="btn bg-transparent" style={{color: '#006600'}} onClick={() => {props.showOrderHistoryRequest();}}>
+              <h6>Order history</h6>    
             </button>
         </div>
       );

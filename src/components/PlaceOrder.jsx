@@ -21,6 +21,9 @@ const PlaceOrder = (props) => {
 
   return (  
     <div>
+       <h3>Complete your order</h3>
+       <hr></hr>
+       <br></br>
 
       <table className="table table-striped table-bordered">        
         <thead className="thead-dark">
